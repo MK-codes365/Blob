@@ -1,4 +1,4 @@
-import { pgTable, uuid, timestamp, index, json } from "drizzle-orm/pg-core";
+import { pgTable, uuid, timestamp, index, jsonb } from "drizzle-orm/pg-core";
 import { topics } from "./topics";
 
 export const mindMaps = pgTable("mind_maps", {
@@ -6,7 +6,7 @@ export const mindMaps = pgTable("mind_maps", {
         topicId: uuid("topic_id")
             .notNull()
             .references(() => topics.id, { onDelete: "cascade" }),
-        json: json("json").notNull(),
+        data: jsonb("json").notNull(),
         createdAt: timestamp("created_at").defaultNow().notNull(),
     },
     (table) => ({
