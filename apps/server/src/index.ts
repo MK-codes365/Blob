@@ -13,8 +13,17 @@ app.use(
   }),
 );
 
-app.get("/health", async (c) => {
-  return c.json({ message: "healthy", status: "ok" });
+// app.get("/health", async (c) => {
+//   return c.json({ message: "healthy", status: "ok" });
+// });
+
+// implemented Health Check Endpoint 
+app.get("/health", (c) => {
+  return c.json({
+    status: "ok",
+    service: "blob-server",
+    timestamp: new Date().toISOString(),
+  });
 });
 
 app.use(
