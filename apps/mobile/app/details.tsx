@@ -19,5 +19,6 @@ export default function Details() {
 }
 
 const styles = {
-  container: 'flex flex-1 bg-white',
+  container: 'flex flex-1 bg-white dark:bg-black',
 };
+
