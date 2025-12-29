@@ -8,7 +8,7 @@ export default function OnboardingLayout() {
   const isDark = colorScheme === 'dark';
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-black">
+    
       <Stack
         screenOptions={{
           headerShown: true,
@@ -34,6 +34,6 @@ export default function OnboardingLayout() {
           }}
         />
       </Stack>
-    </SafeAreaView>
+  
   );
 }

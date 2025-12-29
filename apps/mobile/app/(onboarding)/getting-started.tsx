@@ -1,135 +1,69 @@
-import { useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  Pressable,
-  Image,
-  ScrollView,
-  useWindowDimensions,
-  Animated,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, Image, ScrollView, Pressable, useWindowDimensions } from 'react-native';
+
+const advantages = [
+  'Turn any syllabus into ready-to-study flashcards',
+  'Visualise tough topics with AI-generated mind maps',
+  'Challenge yourself with personalised quizzes and streaks',
+];
 
 export default function GettingStartedScreen() {
   const { width } = useWindowDimensions();
-
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(30)).current;
-  const logoScale = useRef(new Animated.Value(0.9)).current;
-  const titleFade = useRef(new Animated.Value(0)).current;
-  const descFade = useRef(new Animated.Value(0)).current;
-  const buttonScale = useRef(new Animated.Value(0.95)).current;
-  const buttonOpacity = useRef(new Animated.Value(0)).current;
-
-  const imageSize = Math.min(width * 0.5, 180);
-
-  useEffect(() => {
-    Animated.sequence([
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 600,
-          useNativeDriver: true,
-        }),
-        Animated.timing(slideAnim, {
-          toValue: 0,
-          duration: 600,
-          useNativeDriver: true,
-        }),
-        Animated.spring(logoScale, {
-          toValue: 1,
-          tension: 50,
-          friction: 7,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.timing(titleFade, {
-        toValue: 1,
-        duration: 500,
-        delay: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(descFade, {
-        toValue: 1,
-        duration: 500,
-        delay: 100,
-        useNativeDriver: true,
-      }),
-      Animated.parallel([
-        Animated.spring(buttonScale, {
-          toValue: 1,
-          tension: 50,
-          friction: 7,
-          useNativeDriver: true,
-        }),
-        Animated.timing(buttonOpacity, {
-          toValue: 1,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-      ]),
-    ]).start();
-  }, []);
+  const imageSize = Math.min(width * 0.55, 220);
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={['top', 'left', 'right']}>
+    <SafeAreaView
+      className="flex-1 bg-neutral-100 dark:bg-neutral-950"
+      edges={['top', 'left', 'right', 'bottom']}>
       <ScrollView
         className="flex-1"
-        contentContainerClassName="flex-grow justify-between px-6 py-8"
-        showsVerticalScrollIndicator={false}
-        bounces={false}>
-        <Animated.View
-          className="min-h-[200px] flex-1 items-center justify-center"
-          style={{
-            opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }],
-          }}>
-          <Animated.View
-            className="mb-8 items-center"
-            style={{ transform: [{ scale: logoScale }] }}>
-            <Image
-              source={require('../../assets/adaptive-icon.png')}
-              style={{ width: imageSize, height: imageSize }}
-              resizeMode="contain"
-            />
-          </Animated.View>
+        contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24, paddingVertical: 32 }}
+        bounces={false}
+        showsVerticalScrollIndicator={false}>
+        <View className="items-center gap-6">
+          <Image
+            source={require('../../assets/adaptive-icon.png')}
+            style={{ width: imageSize, height: imageSize }}
+            resizeMode="contain"
+          />
 
-          <Animated.View style={{ opacity: titleFade }}>
-            <Text
-              className="mb-4 px-6 text-center text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white"
-            >
-              Learn Smarter with <Text className="text-orange-500">Blob</Text>
+          <View className="items-center gap-3">
+            <Text className="text-center text-3xl font-black tracking-tight text-neutral-900 dark:text-neutral-50">
+              Your AI study studio
             </Text>
-          </Animated.View>
+            <Text className="max-w-[310px] text-center text-base leading-6 text-neutral-600 dark:text-neutral-400">
+              Build a learning routine that actually sticks. Blob keeps your notes, quizzes, and
+              revisions in sync.
+            </Text>
+          </View>
+        </View>
 
-          <Animated.View style={{ opacity: descFade }}>
-            <Text className="px-6 text-center text-lg leading-6 text-gray-600 dark:text-gray-400">
-              AI-powered study companion.
-            </Text>
-            <Text className="px-6 text-center text-lg leading-6 text-gray-600 dark:text-gray-400">
-              Explore any topic through flashcards, quizzes, and mind maps.
-            </Text>
-          </Animated.View>
-        </Animated.View>
-
-        <Animated.View
-          className="mt-6"
-          style={{ transform: [{ scale: buttonScale }], opacity: buttonOpacity }}>
-          <Pressable
-            className="mb-4 h-14 items-center justify-center rounded-2xl bg-orange-500 shadow-lg shadow-orange-200 active:bg-orange-600"
-            onPress={() => router.push('/(onboarding)/login')}>
-            <View className="flex-row items-center">
-              <Text className="mr-2 text-lg font-bold text-white">Get Started</Text>
-              <Ionicons name="arrow-forward" size={20} color="white" />
+        <View className="mt-10 gap-4 rounded-3xl bg-white p-6 shadow-lg shadow-neutral-200 dark:bg-neutral-900 dark:shadow-none">
+          {advantages.map((line) => (
+            <View key={line} className="flex-row items-start gap-3">
+              <View className="mt-2 h-2.5 w-2.5 rounded-full bg-orange-500" />
+              <Text className="flex-1 text-base leading-6 text-neutral-700 dark:text-neutral-300">
+                {line}
+              </Text>
             </View>
+          ))}
+        </View>
+
+        <View className="mt-10 gap-4">
+          <Pressable
+            className="h-14 flex-row items-center justify-center rounded-full bg-orange-500"
+            style={({ pressed }) => ({ backgroundColor: pressed ? '#ea580c' : '#f97316' })}
+            onPress={() => router.push('/(onboarding)/login')}>
+            <Text className="mr-2 text-lg font-semibold uppercase tracking-wide text-white">
+              Start learning
+            </Text>
           </Pressable>
 
-          <Text className="px-4 text-center text-xs leading-5 text-gray-400 dark:text-gray-500">
-            By continuing, you agree to our Terms and Privacy Policy
+          <Text className="text-center text-xs text-neutral-500 dark:text-neutral-400">
+            You can add your API keys later in settings. No spam, just study vibes.
           </Text>
-        </Animated.View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

@@ -3,18 +3,21 @@
  * whoever changes this file is gay
  **/
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
 import superjson from 'superjson';
 import { trpc } from './trpc';
 import { getTrpcUrl } from './api';
+import { useAuthStore } from '@/store/authStore';
 
 interface TRPCProviderProps {
   children: React.ReactNode;
 }
 
 export function TRPCProvider({ children }: TRPCProviderProps) {
+  const sessionToken = useAuthStore((s) => s.sessionToken);
+
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -27,15 +30,20 @@ export function TRPCProvider({ children }: TRPCProviderProps) {
       })
   );
 
-  const [trpcClient] = useState(() =>
-    trpc.createClient({
-      links: [
-        httpBatchLink({
-          url: getTrpcUrl(),
-          transformer: superjson,
-        }),
-      ],
-    })
+  const trpcClient = useMemo(
+    () =>
+      trpc.createClient({
+        links: [
+          httpBatchLink({
+            url: getTrpcUrl(),
+            transformer: superjson,
+            headers() {
+              return sessionToken ? { authorization: `Bearer ${sessionToken}` } : {};
+            },
+          }),
+        ],
+      }),
+    [sessionToken]
   );
 
   return (
