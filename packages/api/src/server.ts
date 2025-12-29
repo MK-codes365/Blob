@@ -2,9 +2,12 @@ import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { db } from "@blob/db";
 
-export const createTRPCContext = async () => {
+export const createTRPCContext = async (opts?: {
+  authHeader?: string | null;
+}) => {
   return {
     db,
+    authHeader: opts?.authHeader ?? null,
   };
 };
 

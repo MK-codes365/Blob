@@ -15,14 +15,12 @@ export default function GettingStartedScreen() {
   return (
     <SafeAreaView
       className="flex-1 bg-neutral-100 dark:bg-neutral-950"
-      edges={['top', 'left', 'right', 'bottom']}
-    >
+      edges={['top', 'left', 'right', 'bottom']}>
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24, paddingVertical: 32 }}
         bounces={false}
-        showsVerticalScrollIndicator={false}
-      >
+        showsVerticalScrollIndicator={false}>
         <View className="items-center gap-6">
           <Image
             source={require('../../assets/adaptive-icon.png')}
@@ -56,8 +54,7 @@ export default function GettingStartedScreen() {
           <Pressable
             className="h-14 flex-row items-center justify-center rounded-full bg-orange-500"
             style={({ pressed }) => ({ backgroundColor: pressed ? '#ea580c' : '#f97316' })}
-            onPress={() => router.push('/(onboarding)/login')}
-          >
+            onPress={() => router.push('/(onboarding)/login')}>
             <Text className="mr-2 text-lg font-semibold uppercase tracking-wide text-white">
               Start learning
             </Text>

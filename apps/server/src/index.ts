@@ -10,14 +10,14 @@ app.use(
     origin: "*",
     allowHeaders: ["Content-Type"],
     allowMethods: ["POST", "GET", "OPTIONS", "DELETE", "PUT"],
-  }),
+  })
 );
 
 // app.get("/health", async (c) => {
 //   return c.json({ message: "healthy", status: "ok" });
 // });
 
-// implemented Health Check Endpoint 
+// implemented Health Check Endpoint
 app.get("/health", (c) => {
   return c.json({
     status: "ok",
@@ -30,8 +30,12 @@ app.use(
   "/trpc/*",
   trpcServer({
     router: appRouter,
-    createContext: createTRPCContext,
-  }),
+    createContext: (_opts, c) => {
+      const authHeader =
+        c.req.header("authorization") ?? c.req.header("Authorization") ?? null;
+      return createTRPCContext({ authHeader });
+    },
+  })
 );
 
 const port = Number(process.env.PORT) || 8787;

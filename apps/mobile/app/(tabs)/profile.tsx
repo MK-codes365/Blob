@@ -23,13 +23,15 @@ const preferences = [
 export default function ProfileScreen() {
   const logout = useAuthStore((state) => state.logout);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     router.replace('/(onboarding)/getting-started');
   };
 
   return (
-   
+    <SafeAreaView
+      className="flex-1 bg-neutral-100 dark:bg-neutral-950"
+      edges={['top', 'left', 'right', 'bottom']}>
       <ScrollView
         className="flex-1"
         contentContainerStyle={{
@@ -123,6 +125,6 @@ export default function ProfileScreen() {
           </Text>
         </Pressable>
       </ScrollView>
-    
+    </SafeAreaView>
   );
 }

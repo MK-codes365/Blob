@@ -1,9 +1,11 @@
 import { z } from "zod";
 import { router, publicProcedure } from "../server.js";
 import { users } from "@blob/db/schema";
+import { authRouter } from "./auth.js";
 
 // example test router
 export const appRouter = router({
+  auth: authRouter,
   hello: publicProcedure
     .input(z.object({ name: z.string().optional() }))
     .query(({ input }) => {
@@ -25,10 +27,9 @@ export const appRouter = router({
         message: input.message,
       };
     }),
-  testDB: publicProcedure
-    .query(({ ctx }) => {
-      return ctx.db.select().from(users)
-    })
+  testDB: publicProcedure.query(({ ctx }) => {
+    return ctx.db.select().from(users);
+  }),
 });
 
 export type AppRouter = typeof appRouter;
