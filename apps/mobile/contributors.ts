@@ -144,4 +144,8 @@ export const CONTRIBUTORS: Contributor[] = [
     name:"Tejinderpal Singh",
     github:'Tejinder105',
   }
+  {
+    name:"Sujal Kshatri",
+    github:'suzzzal',
+  }
 ];
