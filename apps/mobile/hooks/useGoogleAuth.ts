@@ -32,12 +32,8 @@ export async function signInWithGoogle() {
 
   try {
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-
     const userInfo = await GoogleSignin.signIn();
-
     const idToken = userInfo.data?.idToken;
-    console.log('Google ID Token:', idToken);
-
     return { idToken, userInfo };
   } catch (error) {
     console.error('Google sign-in error:', error);

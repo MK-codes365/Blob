@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { signInWithGoogle, isGoogleSignInAvailable } from '@/hooks/useGoogleAuth';
 import { router } from 'expo-router';
+import { trpc } from '@/utils/trpc';
 
 const FLOW_STEPS = [
   {
@@ -29,8 +30,6 @@ const FLOW_STEPS = [
 ];
 
 export default function LoginScreen() {
-  const { width } = useWindowDimensions();
-
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
   const titleFade = useRef(new Animated.Value(0)).current;
@@ -115,12 +114,21 @@ export default function LoginScreen() {
     }
 
     try {
-      await signInWithGoogle();
+      const { idToken } = await signInWithGoogle();
+      if (!idToken) {
+        Alert.alert('Sign-In Error', 'Failed to get ID token from Google.');
+        return;
+      }
+      const result = await verifyToken.mutateAsync({ idToken });
+      console.log('Verification result:', result);
       router.push('/(tabs)/home');
     } catch (error) {
+      console.error('Sign-in error:', error);
       Alert.alert('Sign-In Error', 'Failed to sign in with Google. Please try again.');
     }
   };
+
+  const verifyToken = trpc.verifyGoogleToken.useMutation();
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={['top', 'left', 'right']}>
