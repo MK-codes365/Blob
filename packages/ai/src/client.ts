@@ -1,85 +1,51 @@
-import { generateText, streamText, type CoreMessage } from 'ai';
+import { generateObject } from 'ai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createOpenAI } from '@ai-sdk/openai';
-import { type AIConfig, getAIConfig } from './config.js';
+import {type AIConfig} from './config.js';
+import
+{
 
-export interface GenerateOptions {
-  prompt: string;
-  system?: string;
-  maxTokens?: number;
-  temperature?: number;
-}
+  type StudyMaterialRequest,
+  type StudyMaterialResponse,
+  StudyMaterialSchema
 
-export interface ChatOptions {
-  messages: CoreMessage[];
-  system?: string;
-  maxTokens?: number;
-  temperature?: number;
-}
+  
+}from './types.js';
 
-export function createAIClient(config?: AIConfig) {
-  const resolvedConfig = config || getAIConfig();
+export class StudyMaterialSDK
+{
+  private config: AIConfig;
 
-  const getModel = () => {
-    switch (resolvedConfig.provider) {
-      case 'google': {
-        const google = createGoogleGenerativeAI({
-          apiKey: resolvedConfig.apiKey,
-        });
-        return google(resolvedConfig.model || 'gemini-1.5-flash');
-      }
-      case 'openai': {
-        const openai = createOpenAI({
-          apiKey: resolvedConfig.apiKey,
-        });
-        return openai(resolvedConfig.model || 'gpt-4o-mini');
-      }
+  constructor(config: AIConfig)
+  {
+    this.config = config;
+  }
+
+  private getModel()
+  {
+    switch(this.config.provider)
+    {
+      case 'google':
+        return createGoogleGenerativeAI({ 
+          apiKey: this.config.apiKey 
+        })(this.config.model);
+      case 'openai':
+        return createOpenAI({ 
+          apiKey: this.config.apiKey 
+        })(this.config.model);
       default:
-        throw new Error(`Unsupported provider: ${resolvedConfig.provider}`);
+        throw new Error(`Unsupported provider: ${this.config.provider}`);
     }
-  };
+  }
 
-  return {
-    async generate(options: GenerateOptions) {
-      const result = await generateText({
-        model: getModel(),
-        prompt: options.prompt,
-        system: options.system,
-        maxTokens: options.maxTokens,
-        temperature: options.temperature,
-      });
-      return result.text;
-    },
+async generateStudyMaterial(input: StudyMaterialRequest): Promise<StudyMaterialResponse> {
+    const { object } = await generateObject({
+      model: this.getModel(),
+      schema: StudyMaterialSchema,
+      system: `You are an expert educator. Create structured study material for a ${input.expertiseLevel} student.`,
+      prompt: `Topic: ${input.topic}. ${input.additionalContext || ''}`,
+    });
 
-    async *stream(options: GenerateOptions) {
-      const result = streamText({
-        model: getModel(),
-        prompt: options.prompt,
-        system: options.system,
-        maxTokens: options.maxTokens,
-        temperature: options.temperature,
-      });
-
-      for await (const chunk of result.textStream) {
-        yield chunk;
-      }
-    },
-
-    async chat(options: ChatOptions) {
-      const result = await generateText({
-        model: getModel(),
-        messages: options.messages,
-        system: options.system,
-        maxTokens: options.maxTokens,
-        temperature: options.temperature,
-      });
-      return result.text;
-    },
-
-    getConfig() {
-      return resolvedConfig;
-    },
-  };
+    return object;
+  }
 }
-
-export type AIClient = ReturnType<typeof createAIClient>;
