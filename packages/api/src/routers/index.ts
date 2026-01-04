@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, publicProcedure } from "../server.js";
+import { router, publicProcedure, secureProcedure } from "../server.js";
 import { oauthAccounts, users } from "@blob/db/schema";
 import { OAuth2Client } from "google-auth-library";
 import { eq } from "drizzle-orm";
@@ -117,6 +117,21 @@ export const appRouter = router({
         );
       }
     }),
+
+  // Protected route example - requires valid JWT
+  getMe: secureProcedure.query(async ({ ctx }) => {
+    const [user] = await ctx.db
+      .select()
+      .from(users)
+      .where(eq(users.id, ctx.userId))
+      .limit(1);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return { user };
+  }),
 });
 
 export type AppRouter = typeof appRouter;
