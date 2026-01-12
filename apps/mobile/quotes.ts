@@ -44,4 +44,15 @@ export const quotes: string[] = [
   "Coding the future, one line at a time.",
   "Patience is part of the process.",
   "Almost there, thank you for waiting."
+  "Syncing ideas with execution.",
+  "The system is thinking.",
+  "Putting logic in the right order.",
+  "Quiet work leads to great results.",
+  "This step makes it better.",
+  "Optimizing the journey.",
+  "Precision over haste.",
+  "Almost ready to impress.",
+  "Intentional progress underway.",
+  "Small waits, better results.",
+  "Shaping a smoother path.",
 ];
