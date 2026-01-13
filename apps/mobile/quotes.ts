@@ -43,7 +43,7 @@ export const quotes: string[] = [
   "Small steps lead to big results.",
   "Coding the future, one line at a time.",
   "Patience is part of the process.",
-  "Almost there, thank you for waiting."
+  "Almost there, thank you for waiting.",
   "Syncing ideas with execution.",
   "The system is thinking.",
   "Putting logic in the right order.",
@@ -60,4 +60,5 @@ export const quotes: string[] = [
   "pspsps pspsps.",
   "Bogos binted.",
   "Tables Turned.",
+  "Simplicity is the ultimate sophistication.",
 ];
