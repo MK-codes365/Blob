@@ -166,6 +166,26 @@ export const appRouter = router({
 
       return { topic };
     }),
+
+  createTopic: secureProcedure
+    .input(
+      z.object({
+        title: z.string().min(1, "Title is required"),
+        description: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const [topic] = await ctx.db
+        .insert(topics)
+        .values({
+          userId: ctx.userId,
+          title: input.title,
+          description: input.description ?? null,
+        })
+        .returning();
+
+      return { topic };
+    }),
 });
 
 export type AppRouter = typeof appRouter;
